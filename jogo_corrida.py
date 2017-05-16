@@ -1,5 +1,7 @@
 import pygame
 import time
+import random
+
 
 pygame.init()
 
@@ -37,16 +39,23 @@ def message_display(text):
 
     game_loop()
     
-    
+def things(thingx, thingy, thingw, thingh, color):
+    pygame.draw.rect(gameDisplay,color,[thingx, thingy, thingw, thingh])   
 
 def crash():
     message_display('voce bateu')
+
     
 def game_loop():
     x = (display_width * 0.45)
     y = (display_height * 0.5)
 
     x_change = 0
+    thingh_startx=random.randrange(0,display_width)
+    thing_starty= -600
+    thing_speed=20
+    thing_width=50
+    thing_height=50
 
     gameExit = False
 
@@ -59,9 +68,9 @@ def game_loop():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    x_change = -5
+                    x_change = -10
                 if event.key == pygame.K_RIGHT:
-                    x_change = 5
+                    x_change = 10
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
@@ -70,11 +79,23 @@ def game_loop():
         x += x_change
 
         gameDisplay.fill(white)
+
+        things(thingh_startx,thing_starty,thing_width,thing_height,black)
+        thing_starty += thing_speed
+
         car(x,y)
+
 
         if x > display_width - car_width or x < 0:
             crash()
-            
+
+
+        if thing_starty > display_height:
+            thing_starty= 0 - thing_height
+            thingh_startx=random.randrange(0,display_width)
+        if y< thing_starty+thing_height:
+            if x> thingh_startx and x<thingh_startx+thing_width or x+car_width>thingh_startx and x+car_width<thingh_startx+thing_width:
+                crash()
         
         pygame.display.update()
         clock.tick(60)
