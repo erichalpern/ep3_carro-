@@ -18,7 +18,7 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('corrida insper')
 clock = pygame.time.Clock()
 
-carImg = pygame.image.load('car_pygame.png')
+carImg = pygame.image.load('car_pygame1.png')
 
 def car(x,y):
     gameDisplay.blit(carImg,(x,y))
@@ -48,14 +48,14 @@ def crash():
     
 def game_loop():
     x = (display_width * 0.45)
-    y = (display_height * 0.5)
+    y = (display_height * 0.55)
 
     x_change = 0
     thingh_startx=random.randrange(0,display_width)
     thing_starty= -600
     thing_speed=20
-    thing_width=50
-    thing_height=50
+    thing_width=85
+    thing_height=85
 
     gameExit = False
 
