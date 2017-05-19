@@ -17,7 +17,7 @@ bright_green = (0,255,0)
 block_color = (53,115,255)
 
 car_width = 73
-
+hscore=0
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Corrida Insper')
 clock = pygame.time.Clock()
@@ -27,8 +27,11 @@ carImg = pygame.image.load('car_pygame1.png')
 
 def things_dodged(count):
     font = pygame.font.SysFont(None, 25)
-    text = font.render("Pontos: "+str(count), True, black)
+    text = font.render("Pontos: "+str(count), True, white)
     gameDisplay.blit(text,(0,0))
+    text2 = font.render("High Score:"+str(hscore), True, white)
+    gameDisplay.blit(text2,(150,0))
+
 
 def things(thingx, thingy, thingw, thingh, color):
     pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
@@ -56,10 +59,9 @@ def message_display(text):
 
 def crash():
     message_display('Perdeu')
-def button(msg,x,y,w,h,ic,ac,action=None    ):
+def button(msg,x,y,w,h,ic,ac,action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
-    print(click)
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
         pygame.draw.rect(gameDisplay, ac,(x,y,w,h))
 
@@ -79,9 +81,9 @@ def game_intro():
             if event.type==pygame.QUIT:
                 pygame.quit()
                 quit()
-        gameDisplay.fill(white)
+        gameDisplay.fill(black)
         largeText = pygame.font.Font('freesansbold.ttf',115)
-        TextSurf, TextRect = text_objects("Vai melhorar", largeText)
+        TextSurf, TextRect = text_objects("Vai melhorar",largeText)
         TextRect.center = ((display_width/2),(display_height/2-50))
         gameDisplay.blit(TextSurf, TextRect)
         button("Start",150,450,100,50,green,bright_green,game_loop)
@@ -125,10 +127,10 @@ def game_loop():
                     x_change = 0
 
         x += x_change
-        gameDisplay.fill(white)
+        gameDisplay.fill(black)
 
         # things(thingx, thingy, thingw, thingh, color)
-        things(thing_startx, thing_starty, thing_width, thing_height, black)
+        things(thing_startx, thing_starty, thing_width, thing_height, green)
 
 
         
@@ -143,12 +145,15 @@ def game_loop():
             thing_starty = 0 - thing_height
             thing_startx = random.randrange(0,display_width)
             dodged += 1
-            thing_speed += 0.4
+            thing_speed += 0.6
             #thing_width += (dodged * 1.2)
 
         if y < thing_starty+thing_height:
 
             if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
+                global hscore
+                if dodged>hscore:
+                    hscore=dodged
                 crash()
         
         pygame.display.update()
