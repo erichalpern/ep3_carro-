@@ -16,7 +16,7 @@ bright_green = (0,255,0)
 
 block_color = (53,115,255)
 
-car_width = 73
+car_width = 110
 hscore=0
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Corrida Insper')
