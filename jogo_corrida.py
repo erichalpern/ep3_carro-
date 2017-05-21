@@ -16,13 +16,15 @@ bright_green = (0,255,0)
 
 block_color = (53,115,255)
 
-car_width = 110
+car_width = 100
 hscore=0
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Corrida Insper')
 clock = pygame.time.Clock()
 
 carImg = pygame.image.load('car_pygame1.png')
+pause=False
+
 
 
 def things_dodged(count):
@@ -74,6 +76,24 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textSurf, textRect = text_objects(msg, smallText)
     textRect.center = ( (x+(w/2)), (y+(h/2)) )
     gameDisplay.blit(textSurf, textRect)
+def unpause():
+    global pause
+    pause=False
+def paused():
+    while pause:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                quit()
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',115)
+        TextSurf, TextRect = text_objects("Pause",largeText)
+        TextRect.center = ((display_width/2),(display_height/2-50))
+        gameDisplay.blit(TextSurf, TextRect)
+        button("Continue",150,450,100,50,green,bright_green,unpause)
+        button("Quit",550,450,100,50,red,bright_red,quit)       
+        pygame.display.update()
+        clock.tick(15)
 def game_intro():
     intro=True
     while intro:
@@ -92,6 +112,7 @@ def game_intro():
         clock.tick(15)
     
 def game_loop():
+    global pause
     x = (display_width * 0.45)
     y = (display_height * 0.8)
 
@@ -121,6 +142,9 @@ def game_loop():
                     x_change = -5
                 if event.key == pygame.K_RIGHT:
                     x_change = 5
+                if event.key==pygame.K_p:
+                    pause=True
+                    paused()
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
