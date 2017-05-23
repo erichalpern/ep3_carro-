@@ -11,8 +11,10 @@ black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
 green=(0,200,0)
+turquoise=(72,209,204)
 bright_red = (255,50,0)
 bright_green = (0,255,0)
+cyan=(0,255,255)
 
 block_color = (53,115,255)
 
@@ -107,7 +109,8 @@ def game_intro():
         TextRect.center = ((display_width/2),(display_height/2-50))
         gameDisplay.blit(TextSurf, TextRect)
         button("Start",150,450,100,50,green,bright_green,game_loop)
-        button("Quit",550,450,100,50,red,bright_red,quit)       
+        button("Quit",550,450,100,50,red,bright_red,quit)
+        button("New Cars",350,450,100,50,turquoise,cyan,quit)       
         pygame.display.update()
         clock.tick(15)
     
