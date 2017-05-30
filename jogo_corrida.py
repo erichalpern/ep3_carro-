@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+import socket, pickle
 
 pygame.init()
 
@@ -26,6 +27,9 @@ clock = pygame.time.Clock()
 
 carImg = pygame.image.load('car_pygame1.png')
 pause=False
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.connect(('127.0.0.1', 8080))
 
 
 
@@ -134,6 +138,14 @@ def game_loop():
     gameExit = False
 
     while not gameExit:
+        data = "3"
+        data = pickle.dumps(data)
+        server.send(data)
+        data = server.recv(1024)
+        data = pickle.loads(data)
+        print(data)
+
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
