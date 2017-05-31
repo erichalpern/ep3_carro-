@@ -37,6 +37,7 @@ def things_dodged(count):
     gameDisplay.blit(text2,(150,0))
 
 
+
 def things(thingx, thingy, thingw, thingh, color):
     pygame.draw.rect(gameDisplay, color, [thingx, thingy, thingw, thingh])
 
@@ -54,12 +55,18 @@ def message_display(text):
     gameDisplay.blit(TextSurf, TextRect)
 
     pygame.display.update()
-
     time.sleep(2)
+    game_loop()   
+def newcars():
+    ncar=True
+    while ncar:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                pygame.quit()
+                quit()
+    gameDisplay.fill(white)
 
-    game_loop()
-    
-    
+
 
 def crash():
     message_display('Perdeu')
@@ -110,7 +117,7 @@ def game_intro():
         gameDisplay.blit(TextSurf, TextRect)
         button("Start",150,450,100,50,green,bright_green,game_loop)
         button("Quit",550,450,100,50,red,bright_red,quit)
-        button("New Cars",350,450,100,50,turquoise,cyan,quit)       
+        button("New Cars",350,450,100,50,turquoise,cyan,newcars)       
         pygame.display.update()
         clock.tick(15)
     
