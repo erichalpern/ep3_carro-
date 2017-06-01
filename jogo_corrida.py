@@ -32,8 +32,7 @@ carImg = pygame.image.load('car_pygame1.png')
 carImg2 = pygame.image.load('car_pygame.png')
 carImg3 = pygame.image.load('car_pygame1.png')
 maincar=carImg
-
-pause=False
+shield=False
 
 
 def things_dodged(count):
@@ -42,7 +41,12 @@ def things_dodged(count):
     gameDisplay.blit(text,(0,0))
     text2 = font.render("High Score:"+str(hscore), True, white)
     gameDisplay.blit(text2,(150,0))
-
+    if shield==False:
+        text3 = font.render("Shield:OFF", True, white)
+        gameDisplay.blit(text3,(300,0))
+    else:
+        text3 = font.render("Shield:ON", True, white)
+        gameDisplay.blit(text3,(300,0))
 
 
 def things(thingx, thingy, thingw, thingh, color):
@@ -144,13 +148,14 @@ def game_loop():
     thing_starty = -600
     thing_speed = 6
     thing_width = 100
-
     thing_height = 100
+
     item_startx = random.randrange(0, display_width)
     item_starty=-1200
     item_speed = 20
     item_width = 100
     item_height = 100
+
     shield_startx = random.randrange(0, display_width)
     shield_starty=-3600
     shield_speed = 14
@@ -165,7 +170,6 @@ def game_loop():
     gameExit = False
 
     while not gameExit:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -189,8 +193,9 @@ def game_loop():
 
         things(thing_startx, thing_starty, thing_width, thing_height, green)
         things(item_startx, item_starty, item_width, item_height,blue)
-   #     things(shield_startx, sheild_starty, shield_width, shield_height,yelow)
+        things(shield_startx, shield_starty, shield_width, shield_height,yelow)
         global m
+        global shield
         thing_starty += thing_speed
         item_starty += item_speed
         shield_starty += shield_speed
@@ -208,16 +213,27 @@ def game_loop():
             thing_speed += 0.6
 
 
+        if shield_starty > display_height:
+            shield_starty=-3600
+            item_startx = random.randrange(0, display_width)
+    
         if item_starty > display_height:
             item_starty=-1200
             item_startx = random.randrange(0, display_width)
             m=1
-        if y < thing_starty+thing_height:
+        if y < shield_starty+shield_height:
+            if x > shield_startx and x < shield_startx + shield_width or x+car_width > shield_startx and x + car_width < shield_startx+shield_width:
+                shield=True
+        if shield==False and  y < thing_starty+thing_height:
             if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
                 global hscore
                 if dodged>hscore:
                     hscore=dodged
                 crash()
+        if y < thing_starty+thing_height and shield==True:
+            if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
+                shield=False
+
         if y < item_starty+item_height and m==0:
             if x > item_startx and x < item_startx + item_width or x+car_width > item_startx and x + car_width < item_startx+item_width:
                 dodged=dodged+1
