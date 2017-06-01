@@ -7,6 +7,8 @@ pygame.init()
 display_width = 800
 display_height = 600
 imagem_fundo = "rua.png"
+imagem_fundo_intro = pygame.image.load('tesla.png')
+imagem_fundo_intro = pygame.transform.scale(imagem_fundo_intro,(800,600))
 black = (0,0,0)
 blue =(65,105,225)
 
@@ -121,18 +123,15 @@ def paused():
         button("Quit",550,450,100,50,red,bright_red,game_intro)       
         pygame.display.update()
         clock.tick(15)
-def game_intro():
+def game_intro(imagem_fundo_intro,gameDisplay):
+    gameDisplay.blit(imagem_fundo_intro,(0,0))
     intro=True
     while intro:
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 pygame.quit()
                 quit()
-        gameDisplay.fill(black)
-        largeText = pygame.font.Font('freesansbold.ttf',115)
-        TextSurf, TextRect = text_objects("Vai melhorar",largeText)
-        TextRect.center = ((display_width/2),(display_height/2-50))
-        gameDisplay.blit(TextSurf, TextRect)
+       
         button("Start",150,450,100,50,green,bright_green,game_loop)
         button("Quit",550,450,100,50,red,bright_red,quit)
         button("New Cars",350,450,100,50,turquoise,cyan,newcars)       
@@ -246,7 +245,7 @@ def game_loop():
                 m=1
         pygame.display.update()
         clock.tick(60)
-game_intro()
+game_intro(imagem_fundo_intro,gameDisplay)
 game_loop()
 pygame.quit()
 quit()
