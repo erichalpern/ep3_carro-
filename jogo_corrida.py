@@ -7,7 +7,7 @@ pygame.init()
 
 display_width = 800
 display_height = 600
-
+imagem_fundo = "rua.png"
 black = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
@@ -28,8 +28,8 @@ clock = pygame.time.Clock()
 carImg = pygame.image.load('car_pygame1.png')
 pause=False
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.connect(('127.0.0.1', 8080))
+#server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#server.connect(('127.0.0.1', 8080))
 
 
 
@@ -138,12 +138,12 @@ def game_loop():
     gameExit = False
 
     while not gameExit:
-        data = "3"
-        data = pickle.dumps(data)
-        server.send(data)
-        data = server.recv(1024)
-        data = pickle.loads(data)
-        print(data)
+        #data = "3"
+        #data = pickle.dumps(data)
+        #server.send(data)
+        #data = server.recv(1024)
+        #data = pickle.loads(data)
+        #print(data)
 
 
 
@@ -166,7 +166,11 @@ def game_loop():
                     x_change = 0
 
         x += x_change
-        gameDisplay.fill(black)
+        
+        background = pygame.image.load(imagem_fundo).convert()
+        background = pygame.transform.scale(background,(800,600))
+        gameDisplay.blit(background,[0,0])
+        
 
         # things(thingx, thingy, thingw, thingh, color)
         things(thing_startx, thing_starty, thing_width, thing_height, green)
