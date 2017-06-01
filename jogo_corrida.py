@@ -6,7 +6,7 @@ pygame.init()
 
 display_width = 800
 display_height = 600
-
+imagem_fundo = "rua.png"
 black = (0,0,0)
 blue =(65,105,225)
 
@@ -33,6 +33,8 @@ carImg2 = pygame.image.load('car_pygame.png')
 carImg3 = pygame.image.load('car_pygame1.png')
 maincar=carImg
 shield=False
+pause=False
+
 
 
 def things_dodged(count):
@@ -189,7 +191,11 @@ def game_loop():
                     x_change = 0
 
         x += x_change
-        gameDisplay.fill(black)
+        
+        background = pygame.image.load(imagem_fundo).convert()
+        background = pygame.transform.scale(background,(800,600))
+        gameDisplay.blit(background,[0,0])
+        
 
         things(thing_startx, thing_starty, thing_width, thing_height, green)
         things(item_startx, item_starty, item_width, item_height,blue)
