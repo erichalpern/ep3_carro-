@@ -138,12 +138,11 @@ def game_loop():
     gameExit = False
 
     while not gameExit:
-        data = "3"
-        data = pickle.dumps(data)
-        server.send(data)
-        data = server.recv(1024)
-        data = pickle.loads(data)
-        print(data)
+        
+        
+        
+        
+        
 
 
 
@@ -166,6 +165,24 @@ def game_loop():
                     x_change = 0
 
         x += x_change
+
+
+        coordenada_x=str(x)
+        coordenada_x=pickle.dumps(coordenada_x)
+        server.send(coordenada_x)
+        coordenada_x=server.recv(1024)
+        coordenada_x=pickle.loads(coordenada_x)
+        print(coordenada_x)
+        coordenada_y=str(y)
+        coordenada_y=pickle.dumps(coordenada_y)
+        server.send(coordenada_y)
+        coordenada_y=server.recv(1024)
+        coordenada_y=pickle.loads(coordenada_y)
+        print(coordenada_y)
+       
+
+
+
         gameDisplay.fill(black)
 
         # things(thingx, thingy, thingw, thingh, color)
@@ -174,7 +191,11 @@ def game_loop():
 
         
         thing_starty += thing_speed
-        car(x,y)
+        
+        
+        #car(x,y)
+        car(float(coordenada_x),float(coordenada_y))
+        car(float(coordenada_x)+100,float(coordenada_y))
         things_dodged(dodged)
 
         if x > display_width - car_width or x < 0:
