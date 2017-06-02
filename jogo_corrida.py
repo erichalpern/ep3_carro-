@@ -1,19 +1,18 @@
 import pygame
 import time
 import random
-import pickle
-import socket
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.connect(('127.0.0.1', 8080))
 
 pygame.init()
 
 display_width = 800
 display_height = 600
 imagem_fundo = "rua.png"
+imagem_fundo_intro = pygame.image.load('tesla.png')
+imagem_fundo_intro = pygame.transform.scale(imagem_fundo_intro,(800,600))
+imagem_fundo_ncar = pygame.image.load('workshop.png')
 black = (0,0,0)
 blue =(65,105,225)
-
+gray=(128,128,128)
 white = (255,255,255)
 red = (255,0,0)
 green=(0,200,0)
@@ -25,8 +24,8 @@ yelow=(255,255,102)
 
 block_color = (53,115,255)
 color=[blue,white,red]
-
 m=1
+r=0
 car_width = 100
 hscore=0
 gameDisplay = pygame.display.set_mode((display_width,display_height))
@@ -34,11 +33,23 @@ pygame.display.set_caption('Corrida Insper')
 clock = pygame.time.Clock()
 carImg = pygame.image.load('car_pygame1.png')
 carImg2 = pygame.image.load('car_pygame.png')
-carImg3 = pygame.image.load('car_pygame1.png')
+pygame.transform.scale(carImg2, (int(125),int(237)))
 maincar=carImg
-shield=False
+teleport=False
 pause=False
+def song():
+     file = 'musica.mp3'
+     pygame.init()
+     pygame.mixer.init()
+     pygame.mixer.music.load(file)
+     pygame.mixer.music.play()
 
+def sombatida():
+     file = 'batida.mp3'
+     pygame.init()
+     pygame.mixer.init()
+     pygame.mixer.music.load(file)
+     pygame.mixer.music.play()
 
 
 def things_dodged(count):
@@ -47,11 +58,11 @@ def things_dodged(count):
     gameDisplay.blit(text,(0,0))
     text2 = font.render("High Score:"+str(hscore), True, white)
     gameDisplay.blit(text2,(150,0))
-    if shield==False:
-        text3 = font.render("Shield:OFF", True, white)
+    if teleport==False:
+        text3 = font.render("teleport:OFF", True, white)
         gameDisplay.blit(text3,(300,0))
     else:
-        text3 = font.render("Shield:ON", True, white)
+        text3 = font.render("teleport:ON", True, white)
         gameDisplay.blit(text3,(300,0))
 
 
@@ -74,25 +85,32 @@ def message_display(text):
     time.sleep(2)
     game_loop()   
 def newcars():
+    global carImg
+    global carImg2
+    global carImg3
     ncar=True
     while ncar:
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 pygame.quit()
                 quit()
-        gameDisplay.fill(green)
+        gameDisplay.blit(imagem_fundo_ncar,(0,0))
         button("",112,155,100,230,cyan,blue,carupdate(carImg))
-        button("",362,155,100,230,cyan,blue,carupdate(carImg2))
-        button("",612,155,100,230,cyan,blue,carupdate(carImg3))
+        button("",612,155,100,250,cyan,blue,carupdate(carImg2))
+        button("Game",412,455,100,50,cyan,blue,game_loop())
+
         car(100,150,carImg)
-        car(350,150,carImg2)
-        car(600,150,carImg3)
+        car(590,130,carImg2)
         pygame.display.update()
         clock.tick(15)
-def carupdate(img):
-    maincar=img
+def carupdate(i):
+    global maincar
+    maincar=i
+
 def crash():
+    sombatida()
     message_display('Perdeu')
+
 def button(msg,x,y,w,h,ic,ac,action=None):
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -125,29 +143,27 @@ def paused():
         button("Quit",550,450,100,50,red,bright_red,game_intro)       
         pygame.display.update()
         clock.tick(15)
-def game_intro():
+def game_intro(imagem_fundo_intro,gameDisplay):
+    gameDisplay.blit(imagem_fundo_intro,(0,0))
     intro=True
     while intro:
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 pygame.quit()
                 quit()
-        gameDisplay.fill(black)
-        largeText = pygame.font.Font('freesansbold.ttf',115)
-        TextSurf, TextRect = text_objects("Vai melhorar",largeText)
-        TextRect.center = ((display_width/2),(display_height/2-50))
-        gameDisplay.blit(TextSurf, TextRect)
+       
         button("Start",150,450,100,50,green,bright_green,game_loop)
         button("Quit",550,450,100,50,red,bright_red,quit)
-        button("New Cars",350,450,100,50,turquoise,cyan,newcars)       
-        pygame.display.update()
+        button("New Cars",350,450,100,50,turquoise,cyan,newcars) 
+      
+        pygame.display.update() 
         clock.tick(15)
     
 def game_loop():
     global pause
     x = (display_width * 0.45)
     y = (display_height * 0.8)
-
+    song()
     x_change = 0
 
     thing_startx = random.randrange(0, display_width)
@@ -162,11 +178,11 @@ def game_loop():
     item_width = 100
     item_height = 100
 
-    shield_startx = random.randrange(0, display_width)
-    shield_starty=-3600
-    shield_speed = 14
-    shield_width = 50
-    shield_height = 100
+    teleport_startx = random.randrange(0, display_width)
+    teleport_starty=-3600
+    teleport_speed = 10
+    teleport_width = 50
+    teleport_height = 100
 
 
     thingCount = 1
@@ -176,7 +192,6 @@ def game_loop():
     gameExit = False
 
     while not gameExit:
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -184,9 +199,9 @@ def game_loop():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    x_change = -7
+                    x_change = -9
                 if event.key == pygame.K_RIGHT:
-                    x_change = 7
+                    x_change = 9
                 if event.key==pygame.K_p:
                     pause=True
                     paused()
@@ -196,47 +211,34 @@ def game_loop():
                     x_change = 0
 
         x += x_change
-
-        coordenada_x=str(x)
-        coordenada_x=pickle.dumps(coordenada_x)
-        server.send(coordenada_x)
-        coordenada_x=server.recv(1024)
-        coordenada_x=pickle.loads(coordenada_x)
-        print(coordenada_x)
-        coordenada_y=str(y)
-        coordenada_y=pickle.dumps(coordenada_y)
-        server.send(coordenada_y)
-        coordenada_y=server.recv(1024)
-        coordenada_y=pickle.loads(coordenada_y)
-        print(coordenada_y)
-       
-
-
-
-        gameDisplay.fill(black)
         
         background = pygame.image.load(imagem_fundo).convert()
         background = pygame.transform.scale(background,(800,600))
         gameDisplay.blit(background,[0,0])
         
-        things(thing_startx, thing_starty, thing_width, thing_height, green)
+
+        things(thing_startx, thing_starty, thing_width, thing_height, red)
         things(item_startx, item_starty, item_width, item_height,blue)
-        things(shield_startx, shield_starty, shield_width, shield_height,yelow)
+        things(teleport_startx, teleport_starty, teleport_width, teleport_height,yelow)
         global m
-        global shield
+        global teleport
         thing_starty += thing_speed
-        
-        #car(x,y)
-        car(float(coordenada_x),float(coordenada_y),carImg2)
-        car(float(coordenada_x)+100,float(coordenada_y),carImg)
-
         item_starty += item_speed
-        shield_starty += shield_speed
+        teleport_starty += teleport_speed
 
+        car(x,y,maincar)
         things_dodged(dodged)
 
-        if x > display_width - car_width or x < 0:
-            crash()
+        if x > display_width - car_width:
+            if teleport==True:
+                teleport=False
+                x=car_width
+            else:
+                crash()
+        if x < 0:
+            if teleport==True:
+                teleport=False
+                x=display_width - car_width
 
         if thing_starty > display_height:
             thing_starty = 0 - thing_height
@@ -245,34 +247,32 @@ def game_loop():
             thing_speed += 0.6
 
 
-        if shield_starty > display_height:
-            shield_starty=-3600
+        if teleport_starty > display_height:
+            teleport_starty=-3600
             item_startx = random.randrange(0, display_width)
     
         if item_starty > display_height:
             item_starty=-1200
             item_startx = random.randrange(0, display_width)
             m=1
-        if y < shield_starty+shield_height:
-            if x > shield_startx and x < shield_startx + shield_width or x+car_width > shield_startx and x + car_width < shield_startx+shield_width:
-                shield=True
-        if shield==False and  y < thing_starty+thing_height:
+        if y < teleport_starty+teleport_height:
+            if x > teleport_startx and x < teleport_startx + teleport_width or x+car_width > teleport_startx and x + car_width < teleport_startx+teleport_width:
+                teleport=True
+        if y < thing_starty+thing_height:
             if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
                 global hscore
                 if dodged>hscore:
                     hscore=dodged
                 crash()
-        if y < thing_starty+thing_height and shield==True:
-            if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
-                shield=False
 
-        if y < item_starty+item_height and m==0:
+        if y < item_starty+item_height and m==1:
             if x > item_startx and x < item_startx + item_width or x+car_width > item_startx and x + car_width < item_startx+item_width:
                 dodged=dodged+1
                 m=1
+                
         pygame.display.update()
         clock.tick(60)
-game_intro()
+game_intro(imagem_fundo_intro,gameDisplay)
 game_loop()
 pygame.quit()
 quit()
