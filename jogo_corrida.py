@@ -9,7 +9,7 @@ display_height = 600
 imagem_fundo = "rua.png"
 imagem_fundo_intro = pygame.image.load('tesla.png')
 imagem_fundo_intro = pygame.transform.scale(imagem_fundo_intro,(800,600))
-<<<<<<< HEAD
+
 imagem_fundo_ncar = pygame.image.load('workshop.png')
 
 black = (0,0,0)
